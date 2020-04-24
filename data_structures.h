@@ -8,23 +8,41 @@ struct Node {
     struct Node* next;
 };
 
-class Queue
+class BaseQueue 
 {
+protected:
     Node* _front;
-    Node* _rear;
-    Node* _temp;
     size_t _size;
 
 public:
-    Queue();
-    ~Queue();
+    BaseQueue();
+    virtual ~BaseQueue();
 
     bool empty() const; // queue empty?
     size_t size() const; // queue size
+    virtual void push(int val) = 0; // insert new element at the end 
+    virtual void pop() = 0; // remove next element
+};
+
+class Queue : public BaseQueue
+{
+    Node* _rear;
+
+public:
+    Queue();
+
+    void push(int val);
+    void pop();
     int& front(); // ref to next element
     int& back(); // ref to last element
-    void push(int val); // insert new element at the end 
-    void pop(); // remove next element
+};
+
+class PriorityQueue : public BaseQueue
+{
+public:
+    void push(int val);
+    void pop();
+    int& top(); // ref to the top element
 };
 
 #endif 

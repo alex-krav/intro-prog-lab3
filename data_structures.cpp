@@ -4,15 +4,13 @@
 
 using namespace std;
 
-Queue::Queue()
+BaseQueue::BaseQueue()
 {
 	_front = NULL;
-	_rear = NULL;
-	_temp = NULL;
 	_size = 0;
 }
 
-Queue::~Queue()
+BaseQueue::~BaseQueue()
 {
 	Node* current = _front;
 	Node* next;
@@ -24,14 +22,21 @@ Queue::~Queue()
 	}
 }
 
-bool Queue::empty() const
+bool BaseQueue::empty() const
 {
 	return (size() == 0);
 }
 
-size_t Queue::size() const
+size_t BaseQueue::size() const
 {
 	return _size;
+}
+
+/*****************************************************/
+
+Queue::Queue()
+{
+	_rear = NULL;
 }
 
 int& Queue::front()
@@ -54,18 +59,18 @@ int& Queue::back()
 
 void Queue::push(int val)
 {
-	if (_rear == NULL) { 
+	if (_rear == NULL) {
 		_rear = new Node;
 		_rear->next = NULL;
 		_rear->data = val;
 		_front = _rear;
 	}
 	else {
-		_temp = new Node;
-		_rear->next = _temp;
-		_temp->data = val;
-		_temp->next = NULL;
-		_rear = _temp;
+		Node* temp = new Node;
+		_rear->next = temp;
+		temp->data = val;
+		temp->next = NULL;
+		_rear = temp;
 	}
 	++_size;
 }
@@ -78,15 +83,66 @@ void Queue::pop()
 	}
 
 	if (_front->next != NULL) {
-		_temp = _front->next;
+		Node* temp = _front->next;
 		delete _front;
-		_front = _temp;
+		_front = temp;
 	}
 	else {
 		delete _front;
 		_front = NULL;
 		_rear = NULL;
 	}
-	
+
+	--_size;
+}
+
+/*****************************************************/
+
+int& PriorityQueue::top()
+{
+	if (empty())
+	{
+		throw runtime_error("PriorityQueue is empty");
+	}
+	return _front->data;
+}
+
+void PriorityQueue::push(int val)
+{
+	Node* temp = new Node;
+	temp->data = val;
+
+	if (_front == NULL || val > _front->data) {
+		temp->next = _front;
+		_front = temp;
+	} 
+	else {
+		Node *prev = _front;
+		while (prev->next != NULL && prev->next->data >= val)
+			prev = prev->next;
+		temp->next = prev->next;
+		prev->next = temp;
+	}
+
+	++_size;
+}
+
+void PriorityQueue::pop()
+{
+	if (empty())
+	{
+		throw runtime_error("Queue is empty");
+	}
+
+	if (_front->next != NULL) {
+		Node* temp = _front->next;
+		delete _front;
+		_front = temp;
+	}
+	else {
+		delete _front;
+		_front = NULL;
+	}
+
 	--_size;
 }

@@ -6,22 +6,21 @@ using namespace std;
 int main() {
 
     try {
-        Queue queue;
+        PriorityQueue queue;
         cout << "empty: " << queue.empty() << endl;
         cout << "size: " << queue.size() << endl;
 
         int arr[] = { 5,7,9 };
         for (int item : arr) {
             queue.push(item);
-            cout << "front: " << queue.front() << endl;
-            cout << "back: " << queue.back() << endl;
         }
+        cout << "top: " << queue.top() << endl;
         cout << "empty: " << queue.empty() << endl;
         cout << "size: " << queue.size() << endl;
+        cout << endl;
 
         while (queue.size()) {
-            cout << "front: " << queue.front() << endl;
-            cout << "back: " << queue.back() << endl;
+            cout << "top: " << queue.top() << endl;
             queue.pop();
         }
         cout << "empty: " << queue.empty() << endl;
