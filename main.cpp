@@ -6,7 +6,7 @@ using namespace std;
 int main() {
 
     try {
-        PriorityQueue<int> queue;
+        Queue<int> queue;
         cout << "empty: " << queue.empty() << endl;
         cout << "size: " << queue.size() << endl;
 
@@ -14,13 +14,13 @@ int main() {
         for (int item : arr) {
             queue.push(item);
         }
-        cout << "top: " << queue.top() << endl;
+        cout << "top: " << queue.front() << endl;
         cout << "empty: " << queue.empty() << endl;
         cout << "size: " << queue.size() << endl;
         cout << endl;
 
         while (queue.size()) {
-            cout << "top: " << queue.top() << endl;
+            cout << "top: " << queue.front() << endl;
             queue.pop();
         }
         cout << "empty: " << queue.empty() << endl;

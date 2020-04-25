@@ -13,18 +13,36 @@ struct Node {
 };
 
 template<typename T>
-class Queue
+class BaseQueue
 {
-    Node<T>* _front;
-    Node<T>* _rear;
-    size_t _size;
+protected:
+	Node<T>* _front;
+	size_t _size;
 
 public:
-    Queue();
-    virtual ~Queue();
+	BaseQueue();
+	virtual ~BaseQueue();
 
-    bool empty() const; // queue empty?
-    size_t size() const; // queue size
+	bool empty() const; // queue empty?
+	size_t size() const; // queue size
+	virtual void push(T val) = 0; // insert new element at the end 
+	virtual void pop() = 0; // remove next element
+};
+
+template<typename T>
+class Queue: BaseQueue<T>
+{
+	using BaseQueue<T>::_size;
+	using BaseQueue<T>::_front;
+
+    Node<T>* _rear;
+
+public:
+	using BaseQueue<T>::empty;
+	using BaseQueue<T>::size;
+
+	Queue();
+
     void push(T val); // insert new element at the end 
     void pop(); // remove next element
     T& front(); // ref to next element
@@ -32,17 +50,15 @@ public:
 };
 
 template<typename T>
-class PriorityQueue
+class PriorityQueue: BaseQueue<T>
 {
-    Node<T>* _front;
-    size_t _size;
+	using BaseQueue<T>::_size;
+	using BaseQueue<T>::_front;
 
 public:
-    PriorityQueue();
-    ~PriorityQueue();
+	using BaseQueue<T>::empty;
+	using BaseQueue<T>::size;
 
-    bool empty() const; // queue empty?
-    size_t size() const; // queue size
     void push(T val); // insert new element at the end 
     void pop(); // remove next element
     T& top(); // ref to the top element
@@ -51,15 +67,14 @@ public:
 /*****************************************************/
 
 template<typename T>
-Queue<T>::Queue()
+BaseQueue<T>::BaseQueue()
 {
 	_front = NULL;
-	_rear = NULL;
 	_size = 0;
 }
 
 template<typename T>
-Queue<T>::~Queue()
+BaseQueue<T>::~BaseQueue()
 {
 	Node<T>* current = _front;
 	Node<T>* next;
@@ -72,15 +87,23 @@ Queue<T>::~Queue()
 }
 
 template<typename T>
-bool Queue<T>::empty() const
+bool BaseQueue<T>::empty() const
 {
 	return (size() == 0);
 }
 
 template<typename T>
-size_t Queue<T>::size() const
+size_t BaseQueue<T>::size() const
 {
 	return _size;
+}
+
+/*****************************************************/
+
+template<typename T>
+Queue<T>::Queue()
+{
+	_rear = NULL;
 }
 
 template<typename T>
@@ -145,38 +168,6 @@ void Queue<T>::pop()
 }
 
 /*****************************************************/
-
-template<typename T>
-PriorityQueue<T>::PriorityQueue()
-{
-	_front = NULL;
-	_size = 0;
-}
-
-template<typename T>
-PriorityQueue<T>::~PriorityQueue()
-{
-	Node<T>* current = _front;
-	Node<T>* next;
-
-	while (current != NULL) {
-		next = current->next;
-		delete current;
-		current = next;
-	}
-}
-
-template<typename T>
-bool PriorityQueue<T>::empty() const
-{
-	return (size() == 0);
-}
-
-template<typename T>
-size_t PriorityQueue<T>::size() const
-{
-	return _size;
-}
 
 template<typename T>
 T& PriorityQueue<T>::top()
