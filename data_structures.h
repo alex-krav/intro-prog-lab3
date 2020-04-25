@@ -6,6 +6,12 @@
 
 using namespace std;
 
+template<typename T, typename P>
+struct Pair {
+	T value;
+	P priority;
+};
+
 template<typename T>
 struct Node {
     T data;
@@ -25,7 +31,7 @@ public:
 
 	bool empty() const; // queue empty?
 	size_t size() const; // queue size
-	virtual void push(T val) = 0; // insert new element at the end 
+	virtual void push(T val) {} // insert new element at the end 
 	virtual void pop() = 0; // remove next element
 };
 
@@ -49,22 +55,23 @@ public:
     T& back(); // ref to last element
 };
 
-template<typename T>
-class PriorityQueue: BaseQueue<T>
+template<typename T, typename P>
+class PriorityQueue: BaseQueue<Pair<T,P>>
 {
-	using BaseQueue<T>::_size;
-	using BaseQueue<T>::_front;
+	typedef Pair<T, P> PQElement;
+	using BaseQueue<PQElement>::_size;
+	using BaseQueue<PQElement>::_front;
 
 public:
-	using BaseQueue<T>::empty;
-	using BaseQueue<T>::size;
+	using BaseQueue<PQElement>::empty;
+	using BaseQueue<PQElement>::size;
 
-    void push(T val); // insert new element at the end 
+    void push(T val, P priority); // insert new element at the end 
     void pop(); // remove next element
     T& top(); // ref to the top element
 };
 
-/*****************************************************/
+/************************ BaseQueue *****************************/
 
 template<typename T>
 BaseQueue<T>::BaseQueue()
@@ -98,7 +105,7 @@ size_t BaseQueue<T>::size() const
 	return _size;
 }
 
-/*****************************************************/
+/************************* Queue ****************************/
 
 template<typename T>
 Queue<T>::Queue()
@@ -131,15 +138,15 @@ void Queue<T>::push(T val)
 {
 	if (_rear == NULL) {
 		_rear = new Node<T>;
-		_rear->next = NULL;
 		_rear->data = val;
+		_rear->next = NULL;
 		_front = _rear;
 	}
 	else {
 		Node<T>* temp = new Node<T>;
-		_rear->next = temp;
 		temp->data = val;
 		temp->next = NULL;
+		_rear->next = temp;
 		_rear = temp;
 	}
 	++_size;
@@ -167,31 +174,33 @@ void Queue<T>::pop()
 	--_size;
 }
 
-/*****************************************************/
+/************************** PriorityQueue ***************************/
 
-template<typename T>
-T& PriorityQueue<T>::top()
+template<typename T, typename P>
+T& PriorityQueue<T, P>::top()
 {
 	if (empty())
 	{
 		throw runtime_error("PriorityQueue is empty");
 	}
-	return _front->data;
+	return _front->data.value;
 }
 
-template<typename T>
-void PriorityQueue<T>::push(T val)
+template<typename T, typename P>
+void PriorityQueue<T, P>::push(T val, P priority)
 {
-	Node<T>* temp = new Node<T>;
-	temp->data = val;
+	Pair<T, P>* pair = new Pair<T, P>;
+	pair->value = val; pair->priority = priority;
+	Node<Pair<T, P>>* temp = new Node<Pair<T, P>>;
+	temp->data = *pair;
 
-	if (_front == NULL || val > _front->data) {
+	if (_front == NULL || priority > _front->data.priority) {
 		temp->next = _front;
 		_front = temp;
 	}
 	else {
-		Node<T>* prev = _front;
-		while (prev->next != NULL && prev->next->data >= val)
+		Node<Pair<T, P>>* prev = _front;
+		while (prev->next != NULL && prev->next->data.priority >= priority)
 			prev = prev->next;
 		temp->next = prev->next;
 		prev->next = temp;
@@ -200,8 +209,8 @@ void PriorityQueue<T>::push(T val)
 	++_size;
 }
 
-template<typename T>
-void PriorityQueue<T>::pop()
+template<typename T, typename P>
+void PriorityQueue<T, P>::pop()
 {
 	if (empty())
 	{
@@ -209,7 +218,7 @@ void PriorityQueue<T>::pop()
 	}
 
 	if (_front->next != NULL) {
-		Node<T>* temp = _front->next;
+		Node<PQElement>* temp = _front->next;
 		delete _front;
 		_front = temp;
 	}
