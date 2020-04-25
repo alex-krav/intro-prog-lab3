@@ -61,10 +61,14 @@ class PriorityQueue: BaseQueue<Pair<T,P>>
 	typedef Pair<T, P> PQElement;
 	using BaseQueue<PQElement>::_size;
 	using BaseQueue<PQElement>::_front;
+	bool (*comparator)(P, P);
 
 public:
 	using BaseQueue<PQElement>::empty;
 	using BaseQueue<PQElement>::size;
+
+	PriorityQueue() {}
+	PriorityQueue(bool (*comparator)(P, P));
 
     void push(T val, P priority); // insert new element at the end 
     void pop(); // remove next element
@@ -177,6 +181,22 @@ void Queue<T>::pop()
 /************************** PriorityQueue ***************************/
 
 template<typename T, typename P>
+PriorityQueue<T, P>::PriorityQueue(bool (*comparator_)(P, P))
+{
+	comparator = comparator_;
+}
+
+template<typename P>
+bool greater_comp(P left, P right) {
+	return left > right;
+}
+
+template<typename P>
+bool less_comp(P left, P right) {
+	return left < right;
+}
+
+template<typename T, typename P>
 T& PriorityQueue<T, P>::top()
 {
 	if (empty())
@@ -194,13 +214,13 @@ void PriorityQueue<T, P>::push(T val, P priority)
 	Node<Pair<T, P>>* temp = new Node<Pair<T, P>>;
 	temp->data = *pair;
 
-	if (_front == NULL || priority > _front->data.priority) {
+	if (_front == NULL || comparator(priority, _front->data.priority)) {
 		temp->next = _front;
 		_front = temp;
 	}
 	else {
 		Node<Pair<T, P>>* prev = _front;
-		while (prev->next != NULL && prev->next->data.priority >= priority)
+		while (prev->next != NULL && (comparator(prev->next->data.priority, priority) || prev->next->data.priority == priority))
 			prev = prev->next;
 		temp->next = prev->next;
 		prev->next = temp;
