@@ -138,10 +138,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="data_structures.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <SubType>
       </SubType>

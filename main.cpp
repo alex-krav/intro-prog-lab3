@@ -1,12 +1,12 @@
-#include <iostream>
 #include "data_structures.h"
+#include <iostream>
 
 using namespace std;
 
 int main() {
 
     try {
-        PriorityQueue queue;
+        PriorityQueue<int> queue;
         cout << "empty: " << queue.empty() << endl;
         cout << "size: " << queue.size() << endl;
 
