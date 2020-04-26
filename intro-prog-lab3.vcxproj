@@ -151,6 +151,11 @@
     <ClInclude Include="io.h" />
     <ClInclude Include="maze.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="input\input1.txt" />
+    <Text Include="input\input2.txt" />
+    <Text Include="input\input3.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

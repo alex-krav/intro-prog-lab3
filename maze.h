@@ -50,6 +50,8 @@ public:
     int width, height;
     unordered_set<Point> walls;
 
+    Grid() {}
+
     Grid(int width_, int height_):
         width(width_), height(height_) {}
 
