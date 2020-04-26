@@ -11,5 +11,6 @@ Grid build_grid();
 
 Grid read_grid_from_file(string in, int field_width);
 void draw_grid(basic_iostream<char>::basic_ostream& out, const Grid& grid, int field_width, vector<Point>* path = nullptr, string filename = "");
+Point get_xy_coord(Grid grid, string mes);
 
 #endif;

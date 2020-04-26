@@ -127,3 +127,23 @@ void draw_grid(const Grid& grid, int field_width, vector<Point>* path, string fi
         draw_grid(cout, grid, field_width, path);
     }
 }
+
+Point get_xy_coord(Grid grid, string mes)
+{
+    int x, y;
+    cout << mes;
+    string line, num;
+    getline(cin, line);
+    stringstream ss(line);
+    getline(ss, num, ',');
+    x = stoi(num);
+    getline(ss, num, ',');
+    y = stoi(num);
+
+    Point coord{ x,y };
+    if (!grid.passable(coord)) {
+        cerr << "Don't select points on walls." << endl;
+        exit(1);
+    }
+    return coord;
+}
