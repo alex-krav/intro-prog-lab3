@@ -73,6 +73,7 @@ public:
     void push(T val, P priority); // insert new element at the end 
     void pop(); // remove next element
     T& top(); // ref to the top element
+	T get(); // remove top element and return it
 };
 
 /************************ BaseQueue *****************************/
@@ -248,6 +249,18 @@ void PriorityQueue<T, P>::pop()
 	}
 
 	--_size;
+}
+
+template<typename T, typename P>
+T PriorityQueue<T, P>::get()
+{
+	if (empty())
+	{
+		throw runtime_error("PriorityQueue is empty");
+	}
+	T item = top();
+	pop();
+	return item;
 }
 
 #endif 

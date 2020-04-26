@@ -1,38 +1,17 @@
-#include "data_structures.h"
-#include <iostream>
+#include "algo.h"
+#include "io.h"
 
 using namespace std;
 
 int main() {
-
-    try {
-        PriorityQueue<char, int> queue = PriorityQueue<char, int>(less_comp<int>);
-        cout << "empty: " << queue.empty() << endl;
-        cout << "size: " << queue.size() << endl;
-
-        queue.push('a', 1);
-        queue.push('b', 2);
-        queue.push('c', 3);
-
-        cout << "top: " << queue.top() << endl;
-        cout << "empty: " << queue.empty() << endl;
-        cout << "size: " << queue.size() << endl;
-        cout << endl;
-
-        while (queue.size()) {
-            cout << "top: " << queue.top() << endl;
-            queue.pop();
-        }
-        cout << "empty: " << queue.empty() << endl;
-        cout << "size: " << queue.size() << endl;
-
-        queue.pop();
-        delete(&queue);
-    }
-    catch (exception e) {
-        cerr << e.what() << endl;
-    }
-    
+    Grid grid = build_grid();
+    Point start{ 1, 4 };
+    Point goal{ 8, 5 };
+    unordered_map<Point, Point> came_from;
+    //search(grid, start, goal, came_from, heuristic);
+    search(grid, start, goal, came_from);
+    vector<Point> path = reconstruct_path(start, goal, came_from);
+    draw_grid(grid, &path);
 
     return 0;
 }
