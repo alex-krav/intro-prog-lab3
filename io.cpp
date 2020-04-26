@@ -8,39 +8,43 @@
 
 using namespace std;
 
-void draw_grid(const Grid& grid, int field_width, vector<Point>* path)
+void draw_grid(basic_iostream<char>::basic_ostream& out, const Grid& grid, int field_width, vector<Point>* path, string filename)
 {
-    cout << string(field_width, ' ');
-    for (int x = 0; x != grid.width; ++x) {
-        cout << left << setw(field_width);
-        cout << x;
+    if (filename.empty()) {
+        out << string(field_width, ' ');
+        for (int x = 0; x != grid.width; ++x) {
+            out << left << setw(field_width);
+            out << x;
+        }
+        out << '\n';
     }
-    cout << '\n';
 
     for (int y = 0; y != grid.height; ++y) {
-        cout << left << setw(field_width);
-        cout << y;
+        if (filename.empty()) {
+            out << left << setw(field_width);
+            out << y;
+        }
         for (int x = 0; x != grid.width; ++x) {
             Point id{ x, y };
-            cout << left << setw(field_width);
+            out << left << setw(field_width);
             if (grid.walls.find(id) != grid.walls.end()) {
-                cout << 'X';
+                out << 'X';
             }
             else if (path != nullptr) {
                 vector<Point>::iterator iter = find(path->begin(), path->end(), id);
                 if (iter != path->end()) {
                     int index = distance(path->begin(), iter);
-                    cout << hex << index;
+                    out << hex << ++index;
                 }
                 else {
-                    cout << ' ';
+                    out << ' ';
                 }
             }
             else {
-                cout << ' ';
+                out << ' ';
             }
         }
-        cout << '\n';
+        out << '\n';
     }
 }
 
@@ -107,36 +111,19 @@ Grid read_grid_from_file(string in, int field_width) {
     }   
 }
 
-void save_grid_to_file(string out, const Grid& grid, int field_width, vector<Point>* path) {
-    ofstream output(out, ios_base::trunc);
+void draw_grid(const Grid& grid, int field_width, vector<Point>* path, string filename) 
+{
+    if (!filename.empty()) {
+        ofstream output(filename, ios_base::trunc);
 
-    if (output.is_open())
-    {
-        for(int y = 0; y != grid.height; ++y) {
-            for (int x = 0; x != grid.width; ++x) {
-                Point id{ x, y };
-                output << left << setw(field_width);
-                if (grid.walls.find(id) != grid.walls.end()) {
-                    output << 'X';
-                }
-                else if (path != nullptr) {
-                    vector<Point>::iterator iter = find(path->begin(), path->end(), id);
-                    if (iter != path->end()) {
-                        int index = distance(path->begin(), iter);
-                        output << hex << index;
-                    }
-                    else {
-                        output << ' ';
-                    }
-                }
-                else {
-                    output << ' ';
-                }
-            }
-            output << '\n';
+        if (output.is_open()) {
+            draw_grid(output, grid, field_width, path, filename);
+            output.close();
         }
-
-        output.close();
+        else
+            cerr << "Unable to open output file: " << filename << endl;
     }
-    else cerr << "Unable to open output file: " << out << endl;
+    else {
+        draw_grid(cout, grid, field_width, path);
+    }
 }
