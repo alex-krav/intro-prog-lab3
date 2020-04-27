@@ -7,6 +7,7 @@ using namespace std;
 
 void search(Grid graph, Point start, Point goal, unordered_map<Point, Point>& came_from, int (*heuristic_func)(Point a, Point b))
 {
+    int comp = 0, steps = 0;
     PriorityQueue<Point, int> frontier = PriorityQueue<Point, int>(less_comp<int>);
     frontier.push(start, 0);
 
@@ -30,9 +31,12 @@ void search(Grid graph, Point start, Point goal, unordered_map<Point, Point>& ca
                 int priority = new_cost + heuristic_cost;
                 frontier.push(next, priority);
                 came_from[next] = current;
+                ++steps;
             }
+            ++comp;
         }
     }
+    cout << dec << "comparisons: " << comp << ", steps: " << steps << endl;
 }
 
 int heuristic(Point a, Point b) {

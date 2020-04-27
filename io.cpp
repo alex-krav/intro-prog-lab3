@@ -22,7 +22,7 @@ void draw_grid(basic_iostream<char>::basic_ostream& out, const Grid& grid, int f
     for (int y = 0; y != grid.height; ++y) {
         if (filename.empty()) {
             out << left << setw(field_width);
-            out << y;
+            out << dec << y;
         }
         for (int x = 0; x != grid.width; ++x) {
             Point id{ x, y };
